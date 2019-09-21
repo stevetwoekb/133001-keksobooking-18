@@ -2,7 +2,7 @@
 
 var DATA_COUNT = 8;
 var LOCATION_Y_MIN = 130;
-var LOCATION_Y_MAX = 230;
+var LOCATION_Y_MAX = 630;
 
 var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
@@ -10,11 +10,18 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-var HOURS = [
+var CHECKINS = [
   '12:00',
   '13:00',
   '14:00'
 ];
+
+var CHECKOUTS = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+
 
 var FEATURES = [
   'wifi',
@@ -31,7 +38,7 @@ var TYPES = [
   'house',
   'bungalo'
 ];
-var PRIICES = [
+var PRICES = [
   1000,
   1500,
   3000,
@@ -77,16 +84,18 @@ var GUESTS = [
   3,
 ];
 
-var MOCK_OJBECTS = getPins(DATA_COUNT);
-
-
-function enabledMap() {
+function enableMap() {
   var map = document.querySelector('.map');
   map.classList.remove('map--faded');
 }
 
-function getArrayRandomLingth(value) {
-  return value.splice(0, Math.floor(Math.random() * value.length) + 1);
+function getArrayRandomLinght(array) {
+  var newArray = [];
+  var randomLength = Math.floor(Math.random() * array.length);
+  for (var i = 0; i <= randomLength; i++) {
+    newArray.push(array[i]);
+  }
+  return newArray;
 }
 
 function Author(index) {
@@ -94,33 +103,30 @@ function Author(index) {
 }
 
 function Offer(location) {
-  this.title = getRandomeValue(TITLES);
-  this.adress = location.x + ', ' + location.y;
-  this.price = getRandomeValue(PRIICES);
-  this.type = getRandomeValue(TYPES);
-  this.rooms = getRandomeValue(ROOMS);
-  this.guests = getRandomeValue(GUESTS);
-  this.checkin = getRandomeValue(HOURS);
-  this.checkout = getRandomeValue(HOURS);
-  this.features = getArrayRandomLingth(FEATURES);
-  this.description = getRandomeValue(DESCRIPTIONS);
-  this.photos = getArrayRandomLingth(PHOTOS);
+  this.title = getRandomValue(TITLES);
+  this.address = location.x + ', ' + location.y;
+  this.price = getRandomValue(PRICES);
+  this.type = getRandomValue(TYPES);
+  this.rooms = getRandomValue(ROOMS);
+  this.guests = getRandomValue(GUESTS);
+  this.checkin = getRandomValue(CHECKINS);
+  this.checkout = getRandomValue(CHECKOUTS);
+  this.features = getArrayRandomLinght(FEATURES);
+  this.description = getRandomValue(DESCRIPTIONS);
+  this.photos = getArrayRandomLinght(PHOTOS);
 }
-
 function PinPosition() {
-  var locationX = document.querySelector('.map__pins');
-  this.x = getRandomLocation(locationX.offsetWidth, null, null);
-  this.y = getRandomLocation(null, LOCATION_Y_MIN, LOCATION_Y_MAX);
+  var pinsWrapper = document.querySelector('.map__pins');
+  var pin = document.querySelector('.map__pin');
+  this.x = getRandomLocation(pin.offsetWidth / 2, pinsWrapper.offsetWidth - (pin.offsetWidth / 2));
+  this.y = getRandomLocation(LOCATION_Y_MIN, LOCATION_Y_MAX);
 }
 
-function getRandomLocation(value, valueRangeMin, valueRangeMax) {
-  if (valueRangeMin && valueRangeMax) {
-    return Math.floor(Math.random() * (valueRangeMax - valueRangeMin) + valueRangeMin);
-  }
-  return Math.floor(Math.random() * value);
+function getRandomLocation(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
-function getRandomeValue(array) {
+function getRandomValue(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -142,10 +148,11 @@ function cloneElements(templateSelector, elementSelector) {
 
 function renderPin(props) {
   var pinElement = cloneElements('#pin', '.map__pin');
+  pinElement.querySelector('img').src = '';
   pinElement.style.left = (props.location.x - pinElement.clientWidth / 2) + 'px';
   pinElement.style.top = (props.location.y - pinElement.clientHeight) + 'px';
-  pinElement.firstChild.src = props.author.avatar;
-  pinElement.firstChild.alt = props.offer.title;
+  pinElement.querySelector('img').src = props.author.avatar;
+  pinElement.querySelector('img').alt = props.offer.title;
   return pinElement;
 }
 
@@ -154,11 +161,11 @@ function renderPins(pins) {
   var mapPinsElement = document.querySelector('.map__pins');
   var docFragment = document.createDocumentFragment();
   pins.forEach(function (element) {
-    renderPin(element);
     docFragment.appendChild(renderPin(element));
-    mapPinsElement.appendChild(docFragment);
   });
+  mapPinsElement.appendChild(docFragment);
 }
 
-renderPins(MOCK_OJBECTS);
-enabledMap();
+var PINS = getPins(DATA_COUNT);
+renderPins(PINS);
+enableMap();
