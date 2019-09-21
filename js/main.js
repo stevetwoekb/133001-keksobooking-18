@@ -9,16 +9,6 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
-var AVATARS = [
-  'img/avatars/user01.png',
-  'img/avatars/user02.png',
-  'img/avatars/user03.png',
-  'img/avatars/user04.png',
-  'img/avatars/user05.png',
-  'img/avatars/user06.png',
-  'img/avatars/user07.png',
-  'img/avatars/user08.png',
-];
 
 var HOURS = [
   '12:00',
@@ -87,7 +77,8 @@ var GUESTS = [
   3,
 ];
 
-// var MOCK_OJBECTS = generateMock();
+var MOCK_OJBECTS = getPins(8);
+
 
 function enabledMap() {
   var map = document.querySelector('.map');
@@ -98,27 +89,28 @@ function getArrayRandomLingth(value) {
   return value.splice(0, Math.floor(Math.random() * value.length) + 1);
 }
 
-function Author(avatar) {
-  this.avatar = avatar;
+function Author(index) {
+  this.avatar = 'img/avatars/user0' + index + '.png';
 }
 
-function Offer(title, adress, price, type, rooms, guests, checkin, checkout, features, description, photos) {
-  this.title = title;
-  this.adress = adress;
-  this.price = price;
-  this.type = type;
-  this.rooms = rooms;
-  this.guests = guests;
-  this.checkin = checkin;
-  this.checkout = checkout;
-  this.features = features;
-  this.description = description;
-  this.photos = photos;
+function Offer(location) {
+  this.title = getRandomeValue(TITLES);
+  this.adress = location.x + ', ' + location.y;
+  this.price = getRandomeValue(PRIICES);
+  this.type = getRandomeValue(TYPES);
+  this.rooms = getRandomeValue(ROOMS);
+  this.guests = getRandomeValue(GUESTS);
+  this.checkin = getRandomeValue(HOURS);
+  this.checkout = getRandomeValue(HOURS);
+  this.features = getArrayRandomLingth(FEATURES);
+  this.description = getRandomeValue(DESCRIPTIONS);
+  this.photos = getArrayRandomLingth(PHOTOS);
 }
 
-function MapPosition(x, y) {
-  this.x = x;
-  this.y = y;
+function PinPosition() {
+  var locationX = document.querySelector('.map__pins');
+  this.x = getRandomLocation(locationX.offsetWidth, null, null);
+  this.y = getRandomLocation(null, LOCATION_Y_MIN, LOCATION_Y_MAX);
 }
 
 function getRandomLocation(value, valueRangeMin, valueRangeMax) {
@@ -132,16 +124,43 @@ function getRandomeValue(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function generateMock() {
-  var locationX = document.querySelector('.map__overlay');
-  var array = [];
-  for (var i = 0; i < DATA_COUNT; i++) {
-    var author = new Author(AVATARS);
-    var location = new MapPosition(getRandomLocation(locationX.offsetWidth, null, null), getRandomLocation(null, LOCATION_Y_MIN, LOCATION_Y_MAX));
-    var offer = new Offer(TITLES[i], location.x + ', ' + location.y, getRandomeValue(PRIICES), getRandomeValue(TYPES), getRandomeValue(ROOMS), getRandomeValue(GUESTS), getRandomeValue(HOURS), getRandomeValue(HOURS), getArrayRandomLingth(FEATURES), DESCRIPTIONS[i], getArrayRandomLingth(PHOTOS));
-    array.push({author: {avatar: author.avatar[i]}, offer: {title: offer.title, adress: offer.adress, price: offer.price, type: offer.type, rooms: offer.rooms, guests: offer.guests, checkin: offer.checkin, checkout: offer.checkout, features: offer.features, description: offer.description, photos: offer.photos}, location: {x: location.x, y: location.y}});
-  }
-  return array;
+function Pin(number) {
+  this.author = new Author(number);
+  this.location = new PinPosition();
+  this.offer = new Offer(this.location);
 }
-generateMock();
+
+function getPins(number) {
+  return new Array(number).fill('').map(function (element, index) {
+    return new Pin(index + 1);
+  });
+}
+
+function cloneElements(templateSelector, elementSelector) {
+  return document.querySelector(templateSelector).content.querySelector(elementSelector).cloneNode(true);
+}
+
+function renderPin(props) {
+  var pinElement = cloneElements('#pin', '.map__pin');
+  pinElement.style.left = (props.location.x - pinElement.clientWidth / 2) + 'px';
+  pinElement.style.top = (props.location.y - pinElement.clientHeight) + 'px';
+  pinElement.firstChild.src = props.author.avatar;
+  pinElement.firstChild.alt = props.offer.title;
+  return pinElement;
+}
+
+
+function renderPins(pins) {
+  var mapPinsElement = document.querySelector('.map__pins');
+  var docFragment = document.createDocumentFragment();
+  pins.forEach(function (element) {
+    renderPin(element);
+    docFragment.appendChild(renderPin(element));
+    mapPinsElement.appendChild(docFragment);
+  });
+}
+
+var pins = getPins(8);
+
+renderPins(pins);
 enabledMap();
