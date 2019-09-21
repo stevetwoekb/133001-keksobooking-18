@@ -77,7 +77,7 @@ var GUESTS = [
   3,
 ];
 
-var MOCK_OJBECTS = getPins(8);
+var MOCK_OJBECTS = getPins(DATA_COUNT);
 
 
 function enabledMap() {
@@ -160,7 +160,5 @@ function renderPins(pins) {
   });
 }
 
-var pins = getPins(8);
-
-renderPins(pins);
+renderPins(MOCK_OJBECTS);
 enabledMap();
