@@ -240,8 +240,6 @@ function renderPhotoList(parent, selector, photos) {
 function renderCard(data) {
   var mapElement = document.querySelector('.map');
   var filtersElement = mapElement.querySelector('.map__filters-container');
-  var docFragment = document.createDocumentFragment();
-  mapElement.insertBefore(docFragment, filtersElement);
   var offer = data.offer;
   var author = data.author;
   var cardElement = cloneElements('#card', '.map__card');
