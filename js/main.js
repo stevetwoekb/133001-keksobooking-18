@@ -5,6 +5,8 @@ var LOCATION_X_MIN = 0;
 var LOCATION_X_MAX = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 
 var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
@@ -193,8 +195,8 @@ function cloneElements(templateSelector, elementSelector) {
 function renderPin(props) {
   var pinElement = cloneElements('#pin', '.map__pin');
   pinElement.querySelector('img').src = '';
-  pinElement.style.left = (props.location.x - pinElement.clientWidth / 2) + 'px';
-  pinElement.style.top = (props.location.y - pinElement.clientHeight) + 'px';
+  pinElement.style.left = (props.location.x - PIN_WIDTH / 2) + 'px';
+  pinElement.style.top = (props.location.y - PIN_HEIGHT) + 'px';
   pinElement.querySelector('img').src = props.author.avatar;
   pinElement.querySelector('img').alt = props.offer.title;
   return pinElement;
