@@ -104,11 +104,86 @@ var mapFeatures = mapFiltersForm.querySelectorAll('.map__features');
 var adForm = document.querySelector('.ad-form');
 var child = adForm.querySelectorAll('fieldset');
 var address = adForm.querySelector('#address');
+var submitBtn = adForm.querySelector('.ad-form__submit');
+var roomsCapacityMap = {
+  '1': {
+    'guests': ['1'],
+    'errorText': '1 комната для 1 гостя'
+  },
+  '2': {
+    'guests': ['1', '2'],
+    'errorText': '2 комнаты для 1 или 2 гостей'
+  },
+  '3': {
+    'guests': ['1', '2', '3'],
+    'errorText': '3 комнаты для 1, 2 или 3 гостей'
+  },
+  '100': {
+    'guests': ['0'],
+    'errorText': '100 комнат не для гостей'
+  },
+};
 
-adFormDisabled();
+function shuffleArray(array) {
+  var newArray = array.slice();
+  for (var i = newArray.length - 1; i > 0; i--) {
+    var j = getRandomNumberInRange(0, newArray.length);
+    var temp = newArray[i];
+    newArray[i] = newArray[j];
+    newArray[j] = temp;
+  }
+  return newArray;
+}
 
 function getArrayWithRandomLength(array) {
   return shuffleArray(array).slice(0, getRandomNumberInRange(0, array.length));
+}
+
+function getRandomElement(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+function getRandomNumberInRange(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+function flexNormalize(number, forms) {
+  number = Number(number);
+  if (number % 100 === 11) {
+    return forms[0];
+  }
+  var remainder = number % 10;
+  switch (true) {
+    case remainder === 0 || remainder > 4:
+      return forms[0];
+    case remainder === 1:
+      return forms[1];
+    default:
+      return forms[2];
+  }
+}
+
+function roomsFlexNormalize(number) {
+  var forms = ['комнат', 'комната', 'комнаты'];
+  return flexNormalize(number, forms);
+}
+
+function cloneElements(templateSelector, elementSelector) {
+  return document.querySelector(templateSelector).content.querySelector(elementSelector).cloneNode(true);
+}
+
+function PinPosition() {
+  var pinsWrapper = document.querySelector('.map__pins');
+  var pin = document.querySelector('.map__pin');
+  LOCATION_X_MIN = pin.offsetWidth / 2;
+  LOCATION_X_MAX = pinsWrapper.offsetWidth - (pin.offsetWidth / 2);
+  this.x = getRandomNumberInRange(LOCATION_X_MIN, LOCATION_X_MAX);
+  this.y = getRandomNumberInRange(LOCATION_Y_MIN, LOCATION_Y_MAX);
+}
+
+function guestsFlexNormalize(number) {
+  var forms = ['гостей', 'гостя', 'гостей'];
+  return flexNormalize(number, forms);
 }
 
 function Author(index) {
@@ -128,34 +203,6 @@ function Offer(location) {
   this.description = getRandomElement(DESCRIPTIONS);
   this.photos = getArrayWithRandomLength(PHOTOS);
 }
-function PinPosition() {
-  var pinsWrapper = document.querySelector('.map__pins');
-  var pin = document.querySelector('.map__pin');
-  LOCATION_X_MIN = pin.offsetWidth / 2;
-  LOCATION_X_MAX = pinsWrapper.offsetWidth - (pin.offsetWidth / 2);
-  this.x = getRandomNumberInRange(LOCATION_X_MIN, LOCATION_X_MAX);
-  this.y = getRandomNumberInRange(LOCATION_Y_MIN, LOCATION_Y_MAX);
-}
-
-
-function shuffleArray(array) {
-  var newArray = array.slice();
-  for (var i = newArray.length - 1; i > 0; i--) {
-    var j = getRandomNumberInRange(0, newArray.length);
-    var temp = newArray[i];
-    newArray[i] = newArray[j];
-    newArray[j] = temp;
-  }
-  return newArray;
-}
-
-function getRandomNumberInRange(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
-function getRandomElement(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
 
 function Pin(number) {
   this.author = new Author(number);
@@ -163,40 +210,10 @@ function Pin(number) {
   this.offer = new Offer(this.location);
 }
 
-function flexNormalize(number, forms) {
-  number = Number(number);
-  if (number % 100 === 11) {
-    return forms[0];
-  }
-  var remainder = number % 10;
-  switch (true) {
-    case remainder === 0 || remainder > 4:
-      return forms[0];
-    case remainder === 1:
-      return forms[1];
-    default:
-      return forms[2];
-  }
-}
-
-function guestsFlexNormalize(number) {
-  var forms = ['гостей', 'гостя', 'гостей'];
-  return flexNormalize(number, forms);
-}
-
-function roomsFlexNormalize(number) {
-  var forms = ['комнат', 'комната', 'комнаты'];
-  return flexNormalize(number, forms);
-}
-
 function getPins(number) {
   return new Array(number).fill('').map(function (element, index) {
     return new Pin(index + 1);
   });
-}
-
-function cloneElements(templateSelector, elementSelector) {
-  return document.querySelector(templateSelector).content.querySelector(elementSelector).cloneNode(true);
 }
 
 function renderPin(props) {
@@ -217,6 +234,8 @@ function renderPins(pins) {
   });
   mapPinsElement.appendChild(docFragment);
 }
+
+var pins = getPins(DATA_COUNT);
 
 function renderFeatureList(parent, selector, features) {
   var cardelemListFeature = parent.querySelector(selector);
@@ -268,9 +287,6 @@ function renderCard(data) {
   filtersElement.insertAdjacentElement('beforebegin', cardElement);
 }
 
-mapMainPin.addEventListener('mousedown', onMapPinMousedown);
-mapMainPin.addEventListener('keydown', onMapPinKeydown);
-
 function onMapPinMousedown() {
   enableMap();
 }
@@ -281,17 +297,8 @@ function onMapPinKeydown(evt) {
   }
 }
 
-var pins = getPins(DATA_COUNT);
-
-function enableMap() {
-  map.classList.remove('map--faded');
-  adFormEnable();
-  setAddress(mapMainPin);
-  setPriceValidator();
-  setChecksValidator();
-  renderPins(pins);
-  renderCard(pins[0]);
-}
+mapMainPin.addEventListener('mousedown', onMapPinMousedown);
+mapMainPin.addEventListener('keydown', onMapPinKeydown);
 
 function adFormEnable() {
   adForm.classList.remove('ad-form--disabled');
@@ -308,19 +315,19 @@ function adFormEnable() {
 }
 
 function getAddressWithPinDisabled(pin) {
-  var x = parseInt(pin.style.left, 10) + (pin.offsetHeight / 2);
-  var y = parseInt(pin.style.top, 10) + (pin.offsetWidth / 2);
+  var x = Math.floor(parseInt(pin.style.left, 10) + (pin.offsetHeight / 2));
+  var y = Math.floor(parseInt(pin.style.top, 10) + (pin.offsetWidth / 2));
+  return x + ', ' + y;
+}
+
+function getAddressWithPin(pin) {
+  var x = Math.floor(parseInt(pin.style.left, 10) + PIN_HEIGHT);
+  var y = Math.floor(parseInt(pin.style.top, 10) + PIN_WIDTH);
   return x + ', ' + y;
 }
 
 function setAddress(pin) {
   address.value = getAddressWithPin(pin);
-}
-
-function getAddressWithPin(pin) {
-  var x = parseInt(pin.style.left, 10) + PIN_HEIGHT;
-  var y = parseInt(pin.style.top, 10) + PIN_WIDTH;
-  return x + ', ' + y;
 }
 
 function setPriceValidator() {
@@ -370,30 +377,17 @@ function setChecksValidator() {
 
 }
 
-var roomsCapacityMap = {
-  '1': {
-    'guests': ['1'],
-    'errorText': '1 комната для 1 гостя'
-  },
-  '2': {
-    'guests': ['1', '2'],
-    'errorText': '2 комнаты для 1 или 2 гостей'
-  },
-  '3': {
-    'guests': ['1', '2', '3'],
-    'errorText': '3 комнаты для 1, 2 или 3 гостей'
-  },
-  '100': {
-    'guests': ['0'],
-    'errorText': '100 комнат не для гостей'
-  },
-};
-
 function validateRoomsNumbers() {
   var roomsSelect = document.querySelector('[name="rooms"]');
   var rooms = roomsSelect.value;
   var guests = document.querySelector('[name="capacity"]').value;
   roomsSelect.setCustomValidity(roomsCapacityMap[rooms].guests.includes(guests) ? '' : roomsCapacityMap[rooms].errorText);
+}
+
+function addDisabledAttr(array) {
+  array.forEach(function (element) {
+    element.setAttribute('disabled', '');
+  });
 }
 
 function adFormDisabled() {
@@ -403,15 +397,19 @@ function adFormDisabled() {
   addDisabledAttr(mapFeatures);
 }
 
-function addDisabledAttr(array) {
-  array.forEach(function (element) {
-    element.setAttribute('disabled', '');
-  });
-}
-
-var submitBtn = adForm.querySelector('.ad-form__submit');
-
 submitBtn.addEventListener('click', onSubmitButtonClick);
 function onSubmitButtonClick() {
   validateRoomsNumbers();
 }
+
+function enableMap() {
+  map.classList.remove('map--faded');
+  adFormEnable();
+  setAddress(mapMainPin);
+  setPriceValidator();
+  setChecksValidator();
+  renderPins(pins);
+  renderCard(pins[0]);
+}
+
+adFormDisabled();
