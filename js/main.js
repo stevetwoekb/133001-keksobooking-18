@@ -96,6 +96,7 @@ var OFFER_TYPE_LIST_MAP = {
 };
 
 var KEY_CODE_ENTER = 13;
+var KEY_CODE_ESC = 27;
 var map = document.querySelector('.map');
 var mapMainPin = document.querySelector('.map__pin--main');
 var mapFiltersForm = document.querySelector('.map__filters');
@@ -105,6 +106,8 @@ var adForm = document.querySelector('.ad-form');
 var child = adForm.querySelectorAll('fieldset');
 var address = adForm.querySelector('#address');
 var submitBtn = adForm.querySelector('.ad-form__submit');
+var popup;
+var popupClose;
 var roomsCapacityMap = {
   '1': {
     'guests': ['1'],
@@ -261,6 +264,10 @@ function renderPhotoList(parent, selector, photos) {
   cardelemListFeature.appendChild(docFragment);
 }
 
+function onPopupCloseClick() {
+  popup.remove();
+}
+
 function renderCard(data) {
   var filtersElement = map.querySelector('.map__filters-container');
   var offer = data.offer;
@@ -283,6 +290,9 @@ function renderCard(data) {
   renderPhotoList(cardElement, '.popup__photos', offer.photos);
   cardElement.querySelector('.popup__avatar').src = author.avatar;
   filtersElement.insertAdjacentElement('beforebegin', cardElement);
+  popup = map.querySelector('.popup');
+  popupClose = popup.querySelector('.popup__close');
+  popupClose.addEventListener('click', onPopupCloseClick);
 }
 
 function onMapPinMousedown() {
@@ -385,8 +395,30 @@ function addDisabledAttr(array) {
   });
 }
 
+
+function addListenerOnUserPin(pins) {
+  var usersPins = document.querySelectorAll('.map__pin');
+
+  usersPins.forEach(function (element, index) {
+    function onPinClick() {
+      renderCard(pins[index - 1]);
+    }
+
+    if (element.className !== 'map__pin map__pin--main') {
+      element.addEventListener('click', onPinClick);
+      removeEventListener('keydown', onDocumentKeydown);
+    }
+  });
+}
+
 function onSubmitButtonClick() {
   validateRoomsNumbers();
+}
+
+function onDocumentKeydown(evt) {
+  if (evt.keyCode === KEY_CODE_ESC && popup !== null) {
+    popup.remove();
+  }
 }
 
 function adFormDisabled() {
@@ -404,13 +436,12 @@ function enableMap() {
   setChecksValidator();
   renderPins(pins);
   renderCard(pins[0]);
+  addListenerOnUserPin(pins);
 }
-
 var pins = getPins(DATA_COUNT);
 
 mapMainPin.addEventListener('mousedown', onMapPinMousedown);
 mapMainPin.addEventListener('keydown', onMapPinKeydown);
-
 submitBtn.addEventListener('click', onSubmitButtonClick);
-
+document.addEventListener('keydown', onDocumentKeydown);
 adFormDisabled();
