@@ -235,8 +235,6 @@ function renderPins(pins) {
   mapPinsElement.appendChild(docFragment);
 }
 
-var pins = getPins(DATA_COUNT);
-
 function renderFeatureList(parent, selector, features) {
   var cardelemListFeature = parent.querySelector(selector);
   var docFragment = document.createDocumentFragment();
@@ -296,9 +294,6 @@ function onMapPinKeydown(evt) {
     enableMap();
   }
 }
-
-mapMainPin.addEventListener('mousedown', onMapPinMousedown);
-mapMainPin.addEventListener('keydown', onMapPinKeydown);
 
 function adFormEnable() {
   adForm.classList.remove('ad-form--disabled');
@@ -390,16 +385,15 @@ function addDisabledAttr(array) {
   });
 }
 
+function onSubmitButtonClick() {
+  validateRoomsNumbers();
+}
+
 function adFormDisabled() {
   address.value = getAddressWithPinDisabled(mapMainPin);
   addDisabledAttr(child);
   addDisabledAttr(mapFilters);
   addDisabledAttr(mapFeatures);
-}
-
-submitBtn.addEventListener('click', onSubmitButtonClick);
-function onSubmitButtonClick() {
-  validateRoomsNumbers();
 }
 
 function enableMap() {
@@ -411,5 +405,12 @@ function enableMap() {
   renderPins(pins);
   renderCard(pins[0]);
 }
+
+var pins = getPins(DATA_COUNT);
+
+mapMainPin.addEventListener('mousedown', onMapPinMousedown);
+mapMainPin.addEventListener('keydown', onMapPinKeydown);
+
+submitBtn.addEventListener('click', onSubmitButtonClick);
 
 adFormDisabled();
