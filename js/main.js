@@ -220,6 +220,13 @@ function getPins(number) {
   });
 }
 
+function clearCards() {
+  var cards = map.querySelectorAll('.map__card');
+  if (cards.length > 0) {
+    map.removeChild(cards[0]);
+  }
+}
+
 function renderPin(props) {
   var pinElement = cloneElements('#pin', '.map__pin');
   pinElement.querySelector('img').src = '';
@@ -228,6 +235,7 @@ function renderPin(props) {
   pinElement.querySelector('img').src = props.author.avatar;
   pinElement.querySelector('img').alt = props.offer.title;
   function onPinClick() {
+    clearCards();
     renderCard(props);
   }
   pinElement.addEventListener('click', onPinClick);
@@ -423,7 +431,6 @@ function enableMap() {
   setPriceValidator();
   setChecksValidator();
   renderPins(pins);
-  renderCard(pins[0]);
   mapMainPin.removeEventListener('mousedown', onMapPinMousedown);
   mapMainPin.removeEventListener('keydown', onMapPinKeydown);
 }
