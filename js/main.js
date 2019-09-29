@@ -106,6 +106,7 @@ var adForm = document.querySelector('.ad-form');
 var child = adForm.querySelectorAll('fieldset');
 var address = adForm.querySelector('#address');
 var submitBtn = adForm.querySelector('.ad-form__submit');
+var price = adForm.querySelector('#price');
 var popup;
 var popupClose;
 var roomsCapacityMap = {
@@ -226,6 +227,10 @@ function renderPin(props) {
   pinElement.style.top = (props.location.y - PIN_HEIGHT) + 'px';
   pinElement.querySelector('img').src = props.author.avatar;
   pinElement.querySelector('img').alt = props.offer.title;
+  function onPinClick() {
+    renderCard(props);
+  }
+  pinElement.addEventListener('click', onPinClick);
   return pinElement;
 }
 
@@ -293,6 +298,7 @@ function renderCard(data) {
   popup = map.querySelector('.popup');
   popupClose = popup.querySelector('.popup__close');
   popupClose.addEventListener('click', onPopupCloseClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 }
 
 function onMapPinMousedown() {
@@ -357,7 +363,6 @@ function setPriceValidator() {
   }
 
   function setNewParams(minPrice) {
-    var price = adForm.querySelector('#price');
     price.setAttribute('min', minPrice);
     price.placeholder = minPrice;
   }
@@ -368,13 +373,11 @@ function setChecksValidator() {
   var timeOut = adForm.querySelector('#timeout');
 
   function onTimeInClick() {
-    var currentOpt = timeIn.options[timeIn.selectedIndex];
-    timeOut.value = currentOpt.value;
+    timeOut.value = timeIn.value;
   }
 
   function onTimeOutClick() {
-    var currentOpt = timeOut.options[timeOut.selectedIndex];
-    timeIn.value = currentOpt.value;
+    timeIn.value = timeOut.value;
   }
 
   timeIn.addEventListener('input', onTimeInClick);
@@ -395,22 +398,6 @@ function addDisabledAttr(array) {
   });
 }
 
-
-function addListenerOnUserPin(pins) {
-  var usersPins = document.querySelectorAll('.map__pin');
-
-  usersPins.forEach(function (element, index) {
-    function onPinClick() {
-      renderCard(pins[index - 1]);
-    }
-
-    if (element.className !== 'map__pin map__pin--main') {
-      element.addEventListener('click', onPinClick);
-      removeEventListener('keydown', onDocumentKeydown);
-    }
-  });
-}
-
 function onSubmitButtonClick() {
   validateRoomsNumbers();
 }
@@ -418,6 +405,7 @@ function onSubmitButtonClick() {
 function onDocumentKeydown(evt) {
   if (evt.keyCode === KEY_CODE_ESC && popup !== null) {
     popup.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
   }
 }
 
@@ -436,12 +424,12 @@ function enableMap() {
   setChecksValidator();
   renderPins(pins);
   renderCard(pins[0]);
-  addListenerOnUserPin(pins);
+  mapMainPin.removeEventListener('mousedown', onMapPinMousedown);
+  mapMainPin.removeEventListener('keydown', onMapPinKeydown);
 }
 var pins = getPins(DATA_COUNT);
 
 mapMainPin.addEventListener('mousedown', onMapPinMousedown);
 mapMainPin.addEventListener('keydown', onMapPinKeydown);
 submitBtn.addEventListener('click', onSubmitButtonClick);
-document.addEventListener('keydown', onDocumentKeydown);
 adFormDisabled();
