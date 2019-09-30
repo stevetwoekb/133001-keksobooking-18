@@ -96,6 +96,7 @@ var OFFER_TYPE_LIST_MAP = {
 };
 
 var KEY_CODE_ENTER = 13;
+var KEY_CODE_ESC = 27;
 var map = document.querySelector('.map');
 var mapMainPin = document.querySelector('.map__pin--main');
 var mapFiltersForm = document.querySelector('.map__filters');
@@ -105,6 +106,9 @@ var adForm = document.querySelector('.ad-form');
 var child = adForm.querySelectorAll('fieldset');
 var address = adForm.querySelector('#address');
 var submitBtn = adForm.querySelector('.ad-form__submit');
+var price = adForm.querySelector('#price');
+var popup;
+var popupClose;
 var roomsCapacityMap = {
   '1': {
     'guests': ['1'],
@@ -216,6 +220,13 @@ function getPins(number) {
   });
 }
 
+function clearCards() {
+  var cards = map.querySelectorAll('.map__card');
+  if (cards.length > 0) {
+    map.removeChild(cards[0]);
+  }
+}
+
 function renderPin(props) {
   var pinElement = cloneElements('#pin', '.map__pin');
   pinElement.querySelector('img').src = '';
@@ -223,6 +234,11 @@ function renderPin(props) {
   pinElement.style.top = (props.location.y - PIN_HEIGHT) + 'px';
   pinElement.querySelector('img').src = props.author.avatar;
   pinElement.querySelector('img').alt = props.offer.title;
+  function onPinClick() {
+    clearCards();
+    renderCard(props);
+  }
+  pinElement.addEventListener('click', onPinClick);
   return pinElement;
 }
 
@@ -261,6 +277,10 @@ function renderPhotoList(parent, selector, photos) {
   cardelemListFeature.appendChild(docFragment);
 }
 
+function onPopupCloseClick() {
+  popup.remove();
+}
+
 function renderCard(data) {
   var filtersElement = map.querySelector('.map__filters-container');
   var offer = data.offer;
@@ -283,6 +303,10 @@ function renderCard(data) {
   renderPhotoList(cardElement, '.popup__photos', offer.photos);
   cardElement.querySelector('.popup__avatar').src = author.avatar;
   filtersElement.insertAdjacentElement('beforebegin', cardElement);
+  popup = map.querySelector('.popup');
+  popupClose = popup.querySelector('.popup__close');
+  popupClose.addEventListener('click', onPopupCloseClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 }
 
 function onMapPinMousedown() {
@@ -347,7 +371,6 @@ function setPriceValidator() {
   }
 
   function setNewParams(minPrice) {
-    var price = adForm.querySelector('#price');
     price.setAttribute('min', minPrice);
     price.placeholder = minPrice;
   }
@@ -358,13 +381,11 @@ function setChecksValidator() {
   var timeOut = adForm.querySelector('#timeout');
 
   function onTimeInClick() {
-    var currentOpt = timeIn.options[timeIn.selectedIndex];
-    timeOut.value = currentOpt.value;
+    timeOut.value = timeIn.value;
   }
 
   function onTimeOutClick() {
-    var currentOpt = timeOut.options[timeOut.selectedIndex];
-    timeIn.value = currentOpt.value;
+    timeIn.value = timeOut.value;
   }
 
   timeIn.addEventListener('input', onTimeInClick);
@@ -389,6 +410,13 @@ function onSubmitButtonClick() {
   validateRoomsNumbers();
 }
 
+function onDocumentKeydown(evt) {
+  if (evt.keyCode === KEY_CODE_ESC && popup !== null) {
+    popup.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
+  }
+}
+
 function adFormDisabled() {
   address.value = getAddressWithPinDisabled(mapMainPin);
   addDisabledAttr(child);
@@ -403,14 +431,12 @@ function enableMap() {
   setPriceValidator();
   setChecksValidator();
   renderPins(pins);
-  renderCard(pins[0]);
+  mapMainPin.removeEventListener('mousedown', onMapPinMousedown);
+  mapMainPin.removeEventListener('keydown', onMapPinKeydown);
 }
-
 var pins = getPins(DATA_COUNT);
 
 mapMainPin.addEventListener('mousedown', onMapPinMousedown);
 mapMainPin.addEventListener('keydown', onMapPinKeydown);
-
 submitBtn.addEventListener('click', onSubmitButtonClick);
-
 adFormDisabled();
