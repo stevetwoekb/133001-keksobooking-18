@@ -47,7 +47,7 @@ window.data = (function () {
     '13:00',
     '14:00'
   ];
-  
+
   var CHECKOUTS = [
     '12:00',
     '13:00',

@@ -1,6 +1,7 @@
 'use strict';
 window.validators = (function () {
   var adForm = window.utils.adForm;
+  var price = adForm.querySelector('#price');
   var roomsCapacityMap = {
     '1': {
       'guests': ['1'],
@@ -23,7 +24,7 @@ window.validators = (function () {
   function setPriceValidator() {
     var type = adForm.querySelector('#type');
     type.addEventListener('input', onTypeClick);
-  
+
     function onTypeClick() {
       switch (type.value) {
         case 'bungalo':
@@ -40,7 +41,7 @@ window.validators = (function () {
           break;
       }
     }
-  
+
     function setNewParams(minPrice) {
       price.setAttribute('min', minPrice);
       price.placeholder = minPrice;
@@ -76,5 +77,5 @@ window.validators = (function () {
     setChecksValidator: setChecksValidator,
     validateRoomsNumbers: validateRoomsNumbers,
 
-  }
+  };
 })();
