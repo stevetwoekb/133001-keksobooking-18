@@ -12,7 +12,7 @@ window.pin = (function () {
   var clone = window.utils.clone;
   var clearCards = window.cards.clear;
   var renderCard = window.cards.redner;
-  var address = document.querySelector('#address');
+  var address = window.utils.address;
 
   function PinPosition() {
     var pinsWrapper = document.querySelector('.map__pins');

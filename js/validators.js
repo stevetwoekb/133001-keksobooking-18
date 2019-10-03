@@ -1,7 +1,7 @@
 'use strict';
 window.validators = (function () {
-  var adForm = window.utils.adForm;
-  var price = adForm.querySelector('#price');
+  var form = window.utils.form;
+  var price = form.querySelector('#price');
   var roomsCapacityMap = {
     '1': {
       'guests': ['1'],
@@ -22,7 +22,7 @@ window.validators = (function () {
   };
 
   function setPriceValidator() {
-    var type = adForm.querySelector('#type');
+    var type = form.querySelector('#type');
     type.addEventListener('input', onTypeClick);
 
     function onTypeClick() {
@@ -49,8 +49,8 @@ window.validators = (function () {
   }
 
   function setChecksValidator() {
-    var timeIn = adForm.querySelector('#timein');
-    var timeOut = adForm.querySelector('#timeout');
+    var timeIn = form.querySelector('#timein');
+    var timeOut = form.querySelector('#timeout');
 
     function onTimeInClick() {
       timeOut.value = timeIn.value;

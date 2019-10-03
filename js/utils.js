@@ -2,7 +2,7 @@
 window.utils = (function () {
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
-  var address = adForm.querySelector('#address');
+  var adAddress = adForm.querySelector('#address');
   var mapMainPin = document.querySelector('.map__pin--main');
   function getRandomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -59,9 +59,9 @@ window.utils = (function () {
 
   return {
     mapElement: map,
-    adForm: adForm,
-    address: address,
-    mapMainPin: mapMainPin,
+    form: adForm,
+    address: adAddress,
+    mainPin: mapMainPin,
     randomElement: getRandomElement,
     randomLengthArray: getArrayWithRandomLength,
     numberRange: getRandomNumberInRange,

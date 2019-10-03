@@ -9,7 +9,7 @@ window.map = (function () {
   var priceValidator = window.validators.priceValidator;
   var checksValidator = window.validators.checksValidator;
   var adFormEnable = window.form.enable;
-  var mapMainPin = document.querySelector('.map__pin--main');
+  var mainPin = window.utils.mainPin;
   var pins = getPins(DATA_COUNT);
 
 
@@ -26,16 +26,16 @@ window.map = (function () {
   function enableMap() {
     map.classList.remove('map--faded');
     adFormEnable();
-    setAddress(mapMainPin);
+    setAddress(mainPin);
     priceValidator();
     checksValidator();
     render(pins);
-    mapMainPin.removeEventListener('mousedown', onMapPinMousedown);
-    mapMainPin.removeEventListener('keydown', onMapPinKeydown);
+    mainPin.removeEventListener('mousedown', onMapPinMousedown);
+    mainPin.removeEventListener('keydown', onMapPinKeydown);
   }
 
-  mapMainPin.addEventListener('mousedown', onMapPinMousedown);
-  mapMainPin.addEventListener('keydown', onMapPinKeydown);
+  mainPin.addEventListener('mousedown', onMapPinMousedown);
+  mainPin.addEventListener('keydown', onMapPinKeydown);
 
   return {
     mapElement: map
