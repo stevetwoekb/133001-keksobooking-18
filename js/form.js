@@ -2,14 +2,14 @@
 window.form = (function () {
   var mapMainPin = window.utils.mapMainPin;
   var adForm = window.utils.adForm;
+  var pinDisabledAddress = window.pin.pinDisabledAddress;
+  var roomsValidator = window.validators.roomsValidator;
   var child = adForm.querySelectorAll('fieldset');
   var address = adForm.querySelector('#address');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFilters = mapFiltersForm.querySelectorAll('.map__filter');
   var mapFeatures = mapFiltersForm.querySelectorAll('.map__features');
   var submitBtn = adForm.querySelector('.ad-form__submit');
-  var getAddressWithPinDisabled = window.pin.getAddressWithPinDisabled;
-  var validateRoomsNumbers = window.validators.validateRoomsNumbers;
 
   function adFormEnable() {
     adForm.classList.remove('ad-form--disabled');
@@ -32,19 +32,18 @@ window.form = (function () {
   }
 
   function adFormDisabled() {
-    address.value = getAddressWithPinDisabled(mapMainPin);
+    address.value = pinDisabledAddress(mapMainPin);
     addDisabledAttr(child);
     addDisabledAttr(mapFilters);
     addDisabledAttr(mapFeatures);
   }
 
   function onSubmitButtonClick() {
-    validateRoomsNumbers();
+    roomsValidator();
   }
   submitBtn.addEventListener('click', onSubmitButtonClick);
   adFormDisabled();
   return {
-    adFormEnable: adFormEnable,
-    adFormDisabled: adFormDisabled,
+    enable: adFormEnable,
   };
 })();

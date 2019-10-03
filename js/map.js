@@ -3,14 +3,14 @@ window.map = (function () {
   var DATA_COUNT = 8;
   var KEY_CODE_ENTER = 13;
   var map = window.utils.mapElement;
-  var mapMainPin = document.querySelector('.map__pin--main');
-  var getPins = window.pin.getPins;
-  var pins = getPins(DATA_COUNT);
-  var setAddress = window.pin.setAddress;
+  var getPins = window.pin.pins;
+  var setAddress = window.pin.address;
   var render = window.pin.render;
-  var setPriceValidator = window.validators.setPriceValidator;
-  var setChecksValidator = window.validators.setChecksValidator;
-  var adFormEnable = window.form.adFormEnable;
+  var priceValidator = window.validators.priceValidator;
+  var checksValidator = window.validators.checksValidator;
+  var adFormEnable = window.form.enable;
+  var mapMainPin = document.querySelector('.map__pin--main');
+  var pins = getPins(DATA_COUNT);
 
 
   function onMapPinMousedown() {
@@ -27,8 +27,8 @@ window.map = (function () {
     map.classList.remove('map--faded');
     adFormEnable();
     setAddress(mapMainPin);
-    setPriceValidator();
-    setChecksValidator();
+    priceValidator();
+    checksValidator();
     render(pins);
     mapMainPin.removeEventListener('mousedown', onMapPinMousedown);
     mapMainPin.removeEventListener('keydown', onMapPinKeydown);
@@ -38,7 +38,6 @@ window.map = (function () {
   mapMainPin.addEventListener('keydown', onMapPinKeydown);
 
   return {
-    mapElement: map,
-    enableMap: enableMap,
+    mapElement: map
   };
 })();

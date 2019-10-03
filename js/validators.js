@@ -73,9 +73,9 @@ window.validators = (function () {
   }
 
   return {
-    setPriceValidator: setPriceValidator,
-    setChecksValidator: setChecksValidator,
-    validateRoomsNumbers: validateRoomsNumbers,
+    priceValidator: setPriceValidator,
+    checksValidator: setChecksValidator,
+    roomsValidator: validateRoomsNumbers,
 
   };
 })();

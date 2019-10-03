@@ -6,12 +6,12 @@ window.pin = (function () {
   var LOCATION_Y_MAX = 630;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var getRandomNumberInRange = window.utils.getRandomNumberInRange;
+  var numberRange = window.utils.numberRange;
   var Author = window.data.Author;
   var Offer = window.data.Offer;
-  var cloneElements = window.utils.cloneElements;
-  var clearCards = window.cards.clearCards;
-  var renderCard = window.cards.reder;
+  var clone = window.utils.clone;
+  var clearCards = window.cards.clear;
+  var renderCard = window.cards.redner;
   var address = document.querySelector('#address');
 
   function PinPosition() {
@@ -19,8 +19,8 @@ window.pin = (function () {
     var pin = document.querySelector('.map__pin');
     LOCATION_X_MIN = pin.offsetWidth / 2;
     LOCATION_X_MAX = pinsWrapper.offsetWidth - (pin.offsetWidth / 2);
-    this.x = getRandomNumberInRange(LOCATION_X_MIN, LOCATION_X_MAX);
-    this.y = getRandomNumberInRange(LOCATION_Y_MIN, LOCATION_Y_MAX);
+    this.x = numberRange(LOCATION_X_MIN, LOCATION_X_MAX);
+    this.y = numberRange(LOCATION_Y_MIN, LOCATION_Y_MAX);
   }
 
   function Pin(number) {
@@ -52,7 +52,7 @@ window.pin = (function () {
   }
 
   function renderPin(props) {
-    var pinElement = cloneElements('#pin', '.map__pin');
+    var pinElement = clone('#pin', '.map__pin');
     pinElement.querySelector('img').src = '';
     pinElement.style.left = (props.location.x - PIN_WIDTH / 2) + 'px';
     pinElement.style.top = (props.location.y - PIN_HEIGHT) + 'px';
@@ -76,9 +76,9 @@ window.pin = (function () {
   }
 
   return {
-    setAddress: setAddress,
-    getPins: getPins,
-    getAddressWithPinDisabled: getAddressWithPinDisabled,
+    address: setAddress,
+    pins: getPins,
+    pinDisabledAddress: getAddressWithPinDisabled,
     render: renderPins,
   };
 })();

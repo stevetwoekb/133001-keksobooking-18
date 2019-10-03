@@ -80,25 +80,25 @@ window.data = (function () {
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
 
-  var getRandomElement = window.utils.getRandomElement;
-  var getArrayWithRandomLength = window.utils.getArrayWithRandomLength;
+  var randomElement = window.utils.randomElement;
+  var randomLengthArray = window.utils.randomLengthArray;
 
   function Author(index) {
     this.avatar = 'img/avatars/user0' + index + '.png';
   }
 
   function Offer(location) {
-    this.title = getRandomElement(TITLES);
+    this.title = randomElement(TITLES);
     this.address = location.x + ', ' + location.y;
-    this.price = getRandomElement(PRICES);
-    this.type = getRandomElement(TYPES);
-    this.rooms = getRandomElement(ROOMS);
-    this.guests = getRandomElement(GUESTS);
-    this.checkin = getRandomElement(CHECKINS);
-    this.checkout = getRandomElement(CHECKOUTS);
-    this.features = getArrayWithRandomLength(FEATURES);
-    this.description = getRandomElement(DESCRIPTIONS);
-    this.photos = getArrayWithRandomLength(PHOTOS);
+    this.price = randomElement(PRICES);
+    this.type = randomElement(TYPES);
+    this.rooms = randomElement(ROOMS);
+    this.guests = randomElement(GUESTS);
+    this.checkin = randomElement(CHECKINS);
+    this.checkout = randomElement(CHECKOUTS);
+    this.features = randomLengthArray(FEATURES);
+    this.description = randomElement(DESCRIPTIONS);
+    this.photos = randomLengthArray(PHOTOS);
   }
 
   return {

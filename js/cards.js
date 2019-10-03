@@ -10,9 +10,9 @@ window.cards = (function () {
   };
 
   var map = window.utils.mapElement;
-  var cloneElements = window.utils.cloneElements;
-  var roomsFlexNormalize = window.utils.roomsFlexNormalize;
-  var guestsFlexNormalize = window.utils.guestsFlexNormalize;
+  var clone = window.utils.clone;
+  var rooms = window.utils.rooms;
+  var guests = window.utils.guests;
   var popup;
   var popupClose;
 
@@ -64,10 +64,9 @@ window.cards = (function () {
     var filtersElement = map.querySelector('.map__filters-container');
     var offer = data.offer;
     var author = data.author;
-    var cardElement = cloneElements('#card', '.map__card');
+    var cardElement = clone('#card', '.map__card');
     var capacityContent = offer.rooms + ' ' +
-      roomsFlexNormalize(offer.rooms) + ' для ' + offer.guests + ' ' +
-      guestsFlexNormalize(offer.guests);
+    rooms(offer.rooms) + ' для ' + offer.guests + ' ' + guests(offer.guests);
     var timeContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
     cardElement.querySelector('.popup__title').textContent = offer.title;
     cardElement.querySelector('.popup__text--address').textContent = offer.address;
@@ -89,7 +88,7 @@ window.cards = (function () {
   }
 
   return {
-    clearCards: clearCards,
-    reder: renderCard,
+    clear: clearCards,
+    redner: renderCard,
   };
 })();

@@ -62,12 +62,11 @@ window.utils = (function () {
     adForm: adForm,
     address: address,
     mapMainPin: mapMainPin,
-    getRandomElement: getRandomElement,
-    getArrayWithRandomLength: getArrayWithRandomLength,
-    getRandomNumberInRange: getRandomNumberInRange,
-    flexNormalize: flexNormalize,
-    roomsFlexNormalize: roomsFlexNormalize,
-    guestsFlexNormalize: guestsFlexNormalize,
-    cloneElements: cloneElements,
+    randomElement: getRandomElement,
+    randomLengthArray: getArrayWithRandomLength,
+    numberRange: getRandomNumberInRange,
+    rooms: roomsFlexNormalize,
+    guests: guestsFlexNormalize,
+    clone: cloneElements,
   };
 })();
