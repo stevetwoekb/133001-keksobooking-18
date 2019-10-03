@@ -2,10 +2,10 @@
 window.form = (function () {
   var mainPin = window.utils.mainPin;
   var form = window.utils.form;
-  var pinDisabledAddress = window.pin.pinDisabledAddress;
-  var roomsValidator = window.validators.roomsValidator;
-  var child = form.querySelectorAll('fieldset');
+  var disabledAddress = window.pin.disabledAddress;
+  var setRooms = window.validators.setRooms;
   var address = window.utils.address;
+  var child = form.querySelectorAll('fieldset');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFilters = mapFiltersForm.querySelectorAll('.map__filter');
   var mapFeatures = mapFiltersForm.querySelectorAll('.map__features');
@@ -32,14 +32,14 @@ window.form = (function () {
   }
 
   function adFormDisabled() {
-    address.value = pinDisabledAddress(mainPin);
+    address.value = disabledAddress(mainPin);
     addDisabledAttr(child);
     addDisabledAttr(mapFilters);
     addDisabledAttr(mapFeatures);
   }
 
   function onSubmitButtonClick() {
-    roomsValidator();
+    setRooms();
   }
   submitBtn.addEventListener('click', onSubmitButtonClick);
   adFormDisabled();

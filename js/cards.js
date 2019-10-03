@@ -89,6 +89,6 @@ window.cards = (function () {
 
   return {
     clear: clearCards,
-    redner: renderCard,
+    render: renderCard,
   };
 })();

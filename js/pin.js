@@ -11,7 +11,7 @@ window.pin = (function () {
   var Offer = window.data.Offer;
   var clone = window.utils.clone;
   var clearCards = window.cards.clear;
-  var renderCard = window.cards.redner;
+  var renderCard = window.cards.render;
   var address = window.utils.address;
 
   function PinPosition() {
@@ -77,8 +77,8 @@ window.pin = (function () {
 
   return {
     address: setAddress,
-    pins: getPins,
-    pinDisabledAddress: getAddressWithPinDisabled,
+    get: getPins,
+    disabledAddress: getAddressWithPinDisabled,
     render: renderPins,
   };
 })();
