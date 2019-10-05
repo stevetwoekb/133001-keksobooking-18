@@ -80,5 +80,7 @@ window.pin = (function () {
     get: getPins,
     disabledAddress: getAddressWithPinDisabled,
     render: renderPins,
+    addressPosition: getAddressWithPin,
+    maxLocationY: LOCATION_Y_MIN
   };
 })();
