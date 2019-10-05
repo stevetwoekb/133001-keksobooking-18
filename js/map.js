@@ -2,6 +2,7 @@
 window.map = (function () {
   var DATA_COUNT = 8;
   var KEY_CODE_ENTER = 13;
+  var LOCATION_Y_MIN = window.pin.LOCATION_Y_MIN;
   var map = window.utils.mapElement;
   var getPins = window.pin.get;
   var setAddress = window.pin.address;
@@ -13,46 +14,45 @@ window.map = (function () {
   var pins = getPins(DATA_COUNT);
   var mapWidth = map.offsetWidth;
   var mapHeight = map.offsetHeight;
-  var mapMinHeight = window.pin.maxLocationY;
   var pinWidth = mainPin.offsetWidth;
-  var pinPosition = {
-    x: parseInt(mainPin.style.left, 10),
-    y: parseInt(mainPin.style.top, 10),
-  };
-  var startPosition = {
-    x: 0,
-    y: 0,
-  };
 
-  var updatePosition = {
-    x: 0,
-    y: 0,
-  };
-
-
-  function onMapPinMousedown(evt) {
+  function onMapPinMousedown() {
     enableMap();
-    startPosition.x = evt.clientX;
-    startPosition.y = evt.clientY;
-    mainPin.addEventListener('mousemove', onMapPinMousemove);
+    mainPin.removeEventListener('mousedown', onMapPinMousedown);
   }
 
-  function onMapPinMouseup() {
-    mainPin.removeEventListener('mousemove', onMapPinMousemove);
-    pinPosition.x = parseInt(mainPin.style.left, 10);
-    pinPosition.y = parseInt(mainPin.style.top, 10);
-  }
+  function onMapPinMoveMousedown(evt) {
+    var startPosition = {
+      x: evt.clientX,
+      y: evt.clientY,
+    };
 
-  function onMapPinMousemove(evt) {
-    updatePosition.x = startPosition.x - evt.clientX;
-    updatePosition.y = startPosition.y - evt.clientY;
-    var newPositionX = pinPosition.x - updatePosition.x;
-    var newPositionY = pinPosition.y - updatePosition.y;
-    if (newPositionX >= 0 && newPositionY >= 0 && newPositionY <= (mapHeight - mapMinHeight) && newPositionX <= (mapWidth - pinWidth)) {
-      mainPin.style.left = newPositionX + 'px';
-      mainPin.style.top = newPositionY + 'px';
-      setAddress(mainPin);
+    var pinPosition = {
+      x: parseInt(mainPin.style.left, 10),
+      y: parseInt(mainPin.style.top, 10),
+    };
+
+    function getNewPosition(evtMove) {
+      var newPositionX = pinPosition.x - (startPosition.x - evtMove.clientX);
+      var newPositionY = pinPosition.y - (startPosition.y - evtMove.clientY);
+      var minHeightPosition = mapHeight - LOCATION_Y_MIN;
+      var maxWidthPosition = mapWidth - pinWidth;
+      if (newPositionX >= 0 && newPositionY >= 0 && newPositionY <= minHeightPosition && newPositionX <= maxWidthPosition) {
+        mainPin.style.left = newPositionX + 'px';
+        mainPin.style.top = newPositionY + 'px';
+        setAddress(mainPin);
+      }
     }
+
+    function onMapPinMousemove(evtMove) {
+      getNewPosition(evtMove);
+    }
+
+    function onMapPinMouseup() {
+      document.removeEventListener('mousemove', onMapPinMousemove);
+    }
+    document.addEventListener('mouseup', onMapPinMouseup);
+    document.addEventListener('mousemove', onMapPinMousemove);
   }
 
   function onMapPinKeydown(evt) {
@@ -69,9 +69,10 @@ window.map = (function () {
     setChecks();
     render(pins);
     mainPin.removeEventListener('keydown', onMapPinKeydown);
+    mainPin.removeEventListener('mousedown', onMapPinMousedown);
   }
 
-  mainPin.addEventListener('mouseup', onMapPinMouseup);
   mainPin.addEventListener('mousedown', onMapPinMousedown);
+  mainPin.addEventListener('mousedown', onMapPinMoveMousedown);
   mainPin.addEventListener('keydown', onMapPinKeydown);
 })();
