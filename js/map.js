@@ -35,9 +35,9 @@ window.map = (function () {
     function getNewPosition(evtMove) {
       var newPositionX = pinPosition.x - (startPosition.x - evtMove.clientX);
       var newPositionY = pinPosition.y - (startPosition.y - evtMove.clientY);
-      var minHeightPosition = mapHeight - LOCATION_Y_MIN;
+      var maxHeightPosition = mapHeight - LOCATION_Y_MIN;
       var maxWidthPosition = mapWidth - pinWidth;
-      if (newPositionX >= 0 && newPositionY >= 0 && newPositionY <= minHeightPosition && newPositionX <= maxWidthPosition) {
+      if (newPositionX >= 0 && newPositionY >= 0 && newPositionY <= maxHeightPosition && newPositionX <= maxWidthPosition) {
         mainPin.style.left = newPositionX + 'px';
         mainPin.style.top = newPositionY + 'px';
         setAddress(mainPin);
