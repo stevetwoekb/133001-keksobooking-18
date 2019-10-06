@@ -1,20 +1,19 @@
 'use strict';
 window.map = (function () {
-  var DATA_COUNT = 8;
   var KEY_CODE_ENTER = 13;
   var LOCATION_Y_MIN = window.pin.LOCATION_Y_MIN;
   var map = window.utils.mapElement;
-  var getPins = window.pin.get;
   var setAddress = window.pin.address;
   var render = window.pin.render;
   var setPrice = window.validators.setPrice;
   var setChecks = window.validators.setChecks;
   var adFormEnable = window.form.enable;
   var mainPin = window.utils.mainPin;
-  var pins = getPins(DATA_COUNT);
   var mapWidth = map.offsetWidth;
   var mapHeight = map.offsetHeight;
   var pinWidth = mainPin.offsetWidth;
+  var load = window.backend.load;
+  var clone = window.utils.clone;
 
   function onMapPinMousedown() {
     enableMap();
@@ -61,13 +60,31 @@ window.map = (function () {
     }
   }
 
+  function showMessageError() {
+    var errorElement = clone('#error', '.error');
+    var mainElement = document.querySelector('main');
+    var docFragment = document.createDocumentFragment();
+    docFragment.appendChild(errorElement);
+    mainElement.appendChild(docFragment);
+  }
+
+  function getPins() {
+    function onLoad(data) {
+      render(data);
+    }
+    function onError(error) {
+      showMessageError();
+    }
+    load(onLoad, onError);
+  }
+
   function enableMap() {
     map.classList.remove('map--faded');
     adFormEnable();
     setAddress(mainPin);
     setPrice();
     setChecks();
-    render(pins);
+    getPins();
     mainPin.removeEventListener('keydown', onMapPinKeydown);
     mainPin.removeEventListener('mousedown', onMapPinMousedown);
   }

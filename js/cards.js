@@ -1,6 +1,5 @@
 'use strict';
 window.cards = (function () {
-  // var KEY_CODE_ENTER = 13;
   var KEY_CODE_ESC = 27;
   var OFFER_TYPE_LIST_MAP = {
     'flat': 'Квартира',
