@@ -72,7 +72,7 @@ window.map = (function () {
     function onLoad(data) {
       render(data);
     }
-    function onError(error) {
+    function onError() {
       showMessageError();
     }
     load(onLoad, onError);
