@@ -80,5 +80,6 @@ window.pin = (function () {
     get: getPins,
     disabledAddress: getAddressWithPinDisabled,
     render: renderPins,
+    LOCATION_Y_MIN: LOCATION_Y_MIN
   };
 })();
