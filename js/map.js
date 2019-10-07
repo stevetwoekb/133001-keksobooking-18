@@ -67,7 +67,7 @@ window.map = (function () {
     docFragment.appendChild(errorElement);
     mainElement.appendChild(docFragment);
   }
-  
+
   function onLoad(data) {
     render(data);
   }
