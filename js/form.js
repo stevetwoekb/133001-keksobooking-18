@@ -5,6 +5,9 @@ window.form = (function () {
   var disabledAddress = window.pin.disabledAddress;
   var setRooms = window.validators.setRooms;
   var address = window.utils.address;
+  var save = window.backend.save;
+  var showMessageError = window.utils.showMessageError;
+  var showMessageSuccess = window.utils.showMessageSuccess;
   var child = form.querySelectorAll('fieldset');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFilters = mapFiltersForm.querySelectorAll('.map__filter');
@@ -38,8 +41,19 @@ window.form = (function () {
     addDisabledAttr(mapFeatures);
   }
 
-  function onSubmitButtonClick() {
+  function onSubmitButtonClick(evt) {
+    evt.preventDefault();
     setRooms();
+
+    var data = new FormData(form);
+    save(data, onSuccess, onError);
+    function onSuccess() {
+      showMessageSuccess();
+    }
+
+    function onError() {
+      showMessageError();
+    }
   }
   submitBtn.addEventListener('click', onSubmitButtonClick);
   adFormDisabled();
