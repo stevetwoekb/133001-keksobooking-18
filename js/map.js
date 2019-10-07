@@ -67,15 +67,12 @@ window.map = (function () {
     docFragment.appendChild(errorElement);
     mainElement.appendChild(docFragment);
   }
-
-  function getPins() {
-    function onLoad(data) {
-      render(data);
-    }
-    function onError() {
-      showMessageError();
-    }
-    load(onLoad, onError);
+  
+  function onLoad(data) {
+    render(data);
+  }
+  function onError() {
+    showMessageError();
   }
 
   function enableMap() {
@@ -84,7 +81,7 @@ window.map = (function () {
     setAddress(mainPin);
     setPrice();
     setChecks();
-    getPins();
+    load(onLoad, onError);
     mainPin.removeEventListener('keydown', onMapPinKeydown);
     mainPin.removeEventListener('mousedown', onMapPinMousedown);
   }
