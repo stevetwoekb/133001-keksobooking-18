@@ -1,7 +1,7 @@
 'use strict';
 window.backend = (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
-  var URL_SAND = 'https://js.dump.academy/keksobooking';
+  var URL_SEND = 'https://js.dump.academy/keksobooking';
 
   function load(onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -28,7 +28,7 @@ window.backend = (function () {
   function save(data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.open('POST', URL_SAND);
+    xhr.open('POST', URL_SEND);
     xhr.send(data);
     function onLoadFunc() {
       if (xhr.status === 200) {

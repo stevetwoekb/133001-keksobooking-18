@@ -42,11 +42,10 @@ window.form = (function () {
   }
 
   function onSubmitButtonClick(evt) {
-    evt.preventDefault();
     setRooms();
-
+    var isValid = form.checkValidity();
     var data = new FormData(form);
-    save(data, onSuccess, onError);
+
     function onSuccess() {
       showMessageSuccess();
     }
@@ -54,6 +53,12 @@ window.form = (function () {
     function onError() {
       showMessageError();
     }
+    if (isValid) {
+      evt.preventDefault();
+      save(data, onSuccess, onError);
+    }
+
+
   }
   submitBtn.addEventListener('click', onSubmitButtonClick);
   adFormDisabled();
