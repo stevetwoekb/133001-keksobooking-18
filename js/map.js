@@ -9,11 +9,11 @@ window.map = (function () {
   var setChecks = window.validators.setChecks;
   var adFormEnable = window.form.enable;
   var mainPin = window.utils.mainPin;
+  var showMessageError = window.utils.showMessageError;
   var mapWidth = map.offsetWidth;
   var mapHeight = map.offsetHeight;
   var pinWidth = mainPin.offsetWidth;
   var load = window.backend.load;
-  var clone = window.utils.clone;
 
   function onMapPinMousedown() {
     enableMap();
@@ -58,14 +58,6 @@ window.map = (function () {
     if (evt.keyCode === KEY_CODE_ENTER) {
       enableMap();
     }
-  }
-
-  function showMessageError() {
-    var errorElement = clone('#error', '.error');
-    var mainElement = document.querySelector('main');
-    var docFragment = document.createDocumentFragment();
-    docFragment.appendChild(errorElement);
-    mainElement.appendChild(docFragment);
   }
 
   function onLoad(data) {

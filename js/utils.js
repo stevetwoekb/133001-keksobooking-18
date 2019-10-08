@@ -1,9 +1,15 @@
 'use strict';
 window.utils = (function () {
+  var KEY_CODE_ESC = 27;
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
   var adAddress = adForm.querySelector('#address');
   var mapMainPin = document.querySelector('.map__pin--main');
+  var errorElement = cloneElements('#error', '.error');
+  var successElement = cloneElements('#success', '.success');
+  var mainElement = document.querySelector('main');
+  var errorBtn;
+  var docFragment = document.createDocumentFragment();
   function getRandomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
   }
@@ -57,6 +63,61 @@ window.utils = (function () {
     return document.querySelector(templateSelector).content.querySelector(elementSelector).cloneNode(true);
   }
 
+  function closeMessageError() {
+    mainElement.removeChild(errorElement);
+    document.removeEventListener('keydown', onMessageErrorKeydown);
+    document.removeEventListener('click', onMessageErrorClick);
+    errorBtn.removeEventListener('click', onErrorBtnClick);
+  }
+
+  function closeMessageSuccess() {
+    mainElement.removeChild(successElement);
+    document.removeEventListener('keydown', onMessageSuccessKeydown);
+    document.removeEventListener('click', onMessageSuccessClick);
+  }
+
+  function onMessageErrorKeydown(evt) {
+    if (evt.keyCode === KEY_CODE_ESC) {
+      closeMessageError();
+    }
+  }
+
+  function onMessageErrorClick() {
+    closeMessageError();
+  }
+
+  function onMessageSuccessKeydown(evt) {
+    if (evt.keyCode === KEY_CODE_ESC) {
+      closeMessageSuccess();
+    }
+  }
+
+  function onMessageSuccessClick() {
+    closeMessageSuccess();
+  }
+
+  function onErrorBtnClick(evt) {
+    evt.stopPropagation();
+    closeMessageError();
+  }
+
+  function showMessageError() {
+    docFragment.appendChild(errorElement);
+    mainElement.appendChild(docFragment);
+    document.addEventListener('keydown', onMessageErrorKeydown);
+    errorElement.addEventListener('click', onMessageErrorClick);
+    errorBtn = document.querySelector('.error__button');
+    errorBtn.addEventListener('click', onErrorBtnClick);
+  }
+
+  function showMessageSuccess() {
+    docFragment.appendChild(successElement);
+    mainElement.appendChild(docFragment);
+    document.addEventListener('keydown', onMessageSuccessKeydown);
+    successElement.addEventListener('click', onMessageSuccessClick);
+  }
+
+
   return {
     mapElement: map,
     form: adForm,
@@ -68,5 +129,8 @@ window.utils = (function () {
     rooms: roomsFlexNormalize,
     guests: guestsFlexNormalize,
     clone: cloneElements,
+    showMessageError: showMessageError,
+    showMessageSuccess: showMessageSuccess,
+    KEY_CODE_ESC: KEY_CODE_ESC,
   };
 })();
