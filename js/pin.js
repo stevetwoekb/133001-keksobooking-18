@@ -41,6 +41,9 @@ window.pin = (function () {
 
   function renderPins(pins) {
     var mapPinsElement = document.querySelector('.map__pins');
+    mapPinsElement.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (element) {
+      element.remove();
+    });
     var docFragment = document.createDocumentFragment();
     pins.forEach(function (element) {
       docFragment.appendChild(renderPin(element));
