@@ -10,7 +10,6 @@ window.filters = (function () {
   var housingPrice = mapFiltersForm.querySelector('#housing-price');
   var housingRoom = mapFiltersForm.querySelector('#housing-rooms');
   var housingGuests = mapFiltersForm.querySelector('#housing-guests');
-  var mapFeature = mapFiltersForm.querySelectorAll('.map__checkbox');
   var pins = null;
 
   function getData(data) {
@@ -51,31 +50,25 @@ window.filters = (function () {
     }
   }
 
-  function getCheckboxValue() {
-    var checkBoxes = [];
-    mapFeature.forEach(function (element) {
-      if (element.checked) {
-        checkBoxes.push(element.value);
-      }
+  function getCheckboxesValue() {
+    var checkboxesValue = Array.from(document.querySelectorAll('.map__checkbox:checked')).map(function (checkbox) {
+      return checkbox.value;
     });
-    return checkBoxes;
+    return checkboxesValue;
   }
 
-  function getArrayCompare(arr1, arr2) {
-    for (var i = 0; i < arr2.length; i++) {
-      if (arr1.indexOf(arr2[i]) === -1) {
-        return false;
-      }
-    }
-    return true;
+  function getArrayCompare(allFeatures, selectedFeatures) {
+    return selectedFeatures.every(function (feature) {
+      return allFeatures.includes(feature);
+    });
   }
 
-  function filteringCheckboxes(element) {
-    return (getArrayCompare(element.offer.features, getCheckboxValue())) ? element : false;
+  function getFeaturesResult(element) {
+    return getArrayCompare(element.offer.features, getCheckboxesValue());
   }
 
   function onSelectHostingType() {
-    var filteredPins = pins.filter(filterTypes).filter(filterPrice).filter(filterRooms).filter(filterGuests).filter(filteringCheckboxes).slice(0, 5);
+    var filteredPins = pins.filter(filterTypes).filter(filterPrice).filter(filterRooms).filter(filterGuests).filter(getFeaturesResult).slice(0, 5);
     var debouncedRender = debounce(render);
     debouncedRender(filteredPins);
     clearCards();
