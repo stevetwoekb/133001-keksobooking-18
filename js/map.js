@@ -14,6 +14,7 @@ window.map = (function () {
   var mapHeight = map.offsetHeight;
   var pinWidth = mainPin.offsetWidth;
   var load = window.backend.load;
+  var getData = window.filters.getData;
 
   function onMapPinMousedown() {
     enableMap();
@@ -61,7 +62,9 @@ window.map = (function () {
   }
 
   function onLoad(data) {
-    render(data);
+    var shortData = data.slice(0, 5);
+    getData(data);
+    render(shortData);
   }
   function onError() {
     showMessageError();
@@ -81,4 +84,5 @@ window.map = (function () {
   mainPin.addEventListener('mousedown', onMapPinMousedown);
   mainPin.addEventListener('mousedown', onMapPinMoveMousedown);
   mainPin.addEventListener('keydown', onMapPinKeydown);
+
 })();
