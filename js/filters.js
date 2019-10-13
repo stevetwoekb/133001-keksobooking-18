@@ -10,15 +10,15 @@ window.filters = (function () {
     pins = data;
   }
 
-  function onSelectHostingType() {
-    if (hostingType.value !== 'any') {
-      var filteredPins = pins.filter(function (element) {
-        return element.offer.type === hostingType.value;
-      });
-      render(filteredPins.slice(0, 5));
-    } else {
-      render(pins.slice(0, 5));
+  function filterTypes(element) {
+    if (hostingType.value === 'any') {
+      return true;
     }
+    return element.offer.type === hostingType.value;
+  }
+  function onSelectHostingType() {
+    var filteredPins = pins.filter(filterTypes).slice(0, 5);
+    render(filteredPins);
     clearCards();
   }
 
