@@ -11,18 +11,18 @@ window.filters = (function () {
   }
 
   function onSelectHostingType() {
+    if (hostingType.value !== 'any') {
+      var filteredPins = pins.filter(function (element) {
+        return element.offer.type === hostingType.value;
+      });
+      render(filteredPins.slice(0, 5));
+    } else {
+      render(pins.slice(0, 5));
+    }
     clearCards();
-    var filteredPins = pins.filter(function (element) {
-      if (element.offer.type === hostingType.value) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    render(filteredPins.slice(0, 5));
   }
 
-  hostingType.addEventListener('input', onSelectHostingType);
+  mapFiltersForm.addEventListener('change', onSelectHostingType);
   return {
     getData: getData,
   };
