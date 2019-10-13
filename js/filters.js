@@ -3,21 +3,29 @@ window.filters = (function () {
   var render = window.pin.render;
   var clearCards = window.cards.clear;
   var mapFiltersForm = document.querySelector('.map__filters');
-  var hostingType = mapFiltersForm.querySelector('.map__filter');
+  var housingType = mapFiltersForm.querySelector('#housing-type');
+  var housingPrice = mapFiltersForm.querySelector('#housing-price');
   var pins = null;
 
   function getData(data) {
     pins = data;
   }
 
-  function filterTypes(element) {
-    if (hostingType.value === 'any') {
+  function filterPrice(element) {
+    if (housingPrice.value === 'any') {
       return true;
     }
-    return element.offer.type === hostingType.value;
+    console.log(housingPrice.value);
+  }
+
+  function filterTypes(element) {
+    if (housingType.value === 'any') {
+      return true;
+    }
+    return element.offer.type === housingType.value;
   }
   function onSelectHostingType() {
-    var filteredPins = pins.filter(filterTypes).slice(0, 5);
+    var filteredPins = pins.filter(filterTypes).filter(filterPrice).slice(0, 5);
     render(filteredPins);
     clearCards();
   }
