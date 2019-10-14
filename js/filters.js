@@ -50,11 +50,11 @@ window.filters = (function () {
     }
   }
 
-  function getCheckboxesValue() {
-    var checkboxesValue = Array.from(document.querySelectorAll('.map__checkbox:checked')).map(function (checkbox) {
+  function getFeaturesValues() {
+    var featuresValues = Array.from(document.querySelectorAll('.map__checkbox:checked')).map(function (checkbox) {
       return checkbox.value;
     });
-    return checkboxesValue;
+    return featuresValues;
   }
 
   function getArrayCompare(allFeatures, selectedFeatures) {
@@ -64,7 +64,7 @@ window.filters = (function () {
   }
 
   function getFeaturesResult(element) {
-    return getArrayCompare(element.offer.features, getCheckboxesValue());
+    return getArrayCompare(element.offer.features, getFeaturesValues());
   }
 
   function onSelectHostingType() {
