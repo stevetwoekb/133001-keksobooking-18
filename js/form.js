@@ -2,7 +2,7 @@
 window.form = (function () {
   var mainPin = window.utils.mainPin;
   var form = window.utils.form;
-  var disabledAddress = window.pin.disabledAddress;
+  var adressWithPin = window.pin.adressWithPin;
   var setRooms = window.validators.setRooms;
   var address = window.utils.address;
   var save = window.backend.save;
@@ -12,7 +12,9 @@ window.form = (function () {
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFilters = mapFiltersForm.querySelectorAll('.map__filter');
   var mapFeatures = mapFiltersForm.querySelectorAll('.map__features');
+  var mapFeaturesCheckboxes = document.querySelectorAll('.feature__checkbox');
   var submitBtn = form.querySelector('.ad-form__submit');
+  var clearBtn = form.querySelector('.ad-form__reset');
 
   function adFormEnable() {
     form.classList.remove('ad-form--disabled');
@@ -35,12 +37,12 @@ window.form = (function () {
   }
 
   function adFormDisabled() {
-    address.value = disabledAddress(mainPin);
+    form.classList.add('ad-form--disabled');
+    address.value = adressWithPin(mainPin);
     addDisabledAttr(child);
     addDisabledAttr(mapFilters);
     addDisabledAttr(mapFeatures);
   }
-
   function onSubmitButtonClick(evt) {
     setRooms();
     var isValid = form.checkValidity();
@@ -48,6 +50,7 @@ window.form = (function () {
 
     function onSuccess() {
       showMessageSuccess();
+      resetForm();
     }
 
     function onError() {
@@ -57,10 +60,36 @@ window.form = (function () {
       evt.preventDefault();
       save(data, onSuccess, onError);
     }
+  }
+  function clearForm() {
+    document.querySelector('#title').value = '';
+    document.querySelector('#price').value = '';
+    document.querySelector('#description').value = '';
+    var formSelects = form.querySelectorAll('.ad-form__element select');
+    formSelects.forEach(function (element) {
+      if (element.id === 'type') {
+        element.selectedIndex = 1;
+      } else {
+        element.selectedIndex = 0;
+      }
+    });
+  }
 
-
+  function resetForm() {
+    adFormDisabled();
+    clearForm();
+    window.cards.clear();
+    window.map.disable();
+    window.filters.clear();
+    window.pin.clear();
+    window.files.clear();
+    mapFeaturesCheckboxes.forEach(function (element) {
+      element.checked = false;
+    });
   }
   submitBtn.addEventListener('click', onSubmitButtonClick);
+  clearBtn.addEventListener('click', resetForm);
+
   adFormDisabled();
   return {
     enable: adFormEnable,

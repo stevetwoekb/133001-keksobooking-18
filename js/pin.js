@@ -1,18 +1,16 @@
 'use strict';
 window.pin = (function () {
   var LOCATION_Y_MIN = 130;
+  var mainPin = window.utils.mainPin;
+  var PIN_DEFAUT_X_POSITION = 570;
+  var PIN_DEFAUT_Y_POSITION = 375;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
   var clone = window.utils.clone;
   var clearCards = window.cards.clear;
   var renderCard = window.cards.render;
   var address = window.utils.address;
-
-  function getAddressWithPinDisabled(pin) {
-    var x = Math.floor(parseInt(pin.style.left, 10) + (pin.offsetHeight / 2));
-    var y = Math.floor(parseInt(pin.style.top, 10) + (pin.offsetWidth / 2));
-    return x + ', ' + y;
-  }
+  var mapPinsElement = document.querySelector('.map__pins');
 
   function getAddressWithPin(pin) {
     var x = Math.floor(parseInt(pin.style.left, 10) + PIN_HEIGHT);
@@ -38,12 +36,16 @@ window.pin = (function () {
     pinElement.addEventListener('click', onPinClick);
     return pinElement;
   }
-
-  function renderPins(pins) {
-    var mapPinsElement = document.querySelector('.map__pins');
+  function clearPins() {
+    mainPin.style.left = PIN_DEFAUT_X_POSITION + 'px';
+    mainPin.style.top = PIN_DEFAUT_Y_POSITION + 'px';
+    setAddress(mainPin);
     mapPinsElement.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (element) {
       element.remove();
     });
+  }
+  function renderPins(pins) {
+    clearPins();
     var docFragment = document.createDocumentFragment();
     pins.forEach(function (element) {
       docFragment.appendChild(renderPin(element));
@@ -53,8 +55,9 @@ window.pin = (function () {
 
   return {
     address: setAddress,
-    disabledAddress: getAddressWithPinDisabled,
+    adressWithPin: getAddressWithPin,
     render: renderPins,
-    LOCATION_Y_MIN: LOCATION_Y_MIN
+    LOCATION_Y_MIN: LOCATION_Y_MIN,
+    clear: clearPins,
   };
 })();

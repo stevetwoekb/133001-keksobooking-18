@@ -6,6 +6,8 @@ window.filters = (function () {
   var clearCards = window.cards.clear;
   var debounce = window.debounce.debounce;
   var mapFiltersForm = document.querySelector('.map__filters');
+  var mapFiltersSelects = document.querySelectorAll('.map__filter');
+  var mapFeatures = document.querySelectorAll('.map__checkbox');
   var housingType = mapFiltersForm.querySelector('#housing-type');
   var housingPrice = mapFiltersForm.querySelector('#housing-price');
   var housingRoom = mapFiltersForm.querySelector('#housing-rooms');
@@ -74,8 +76,18 @@ window.filters = (function () {
     clearCards();
   }
 
+  function clearFilter() {
+    mapFiltersSelects.forEach(function (element) {
+      element.selectedIndex = 0;
+    });
+    mapFeatures.forEach(function (element) {
+      element.checked = false;
+    });
+  }
+
   mapFiltersForm.addEventListener('change', onSelectHostingType);
   return {
     getData: getData,
+    clear: clearFilter,
   };
 })();
