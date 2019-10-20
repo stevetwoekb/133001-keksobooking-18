@@ -87,7 +87,7 @@ window.map = (function () {
   function disableMap() {
     map.classList.add('map--faded');
     mainPin.addEventListener('mousedown', onMapPinMousedown);
-    mainPin.addEventListener('keydown', onMapPinKeydown)
+    mainPin.addEventListener('keydown', onMapPinKeydown);
   }
 
   mainPin.addEventListener('mousedown', onMapPinMousedown);
