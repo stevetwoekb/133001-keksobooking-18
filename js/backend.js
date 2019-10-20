@@ -2,6 +2,7 @@
 window.backend = (function () {
   var URL = 'https://js.dump.academy/keksobooking/data';
   var URL_SEND = 'https://js.dump.academy/keksobooking';
+  var SERVER_STATUS_OK = 200;
 
   function load(onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -9,7 +10,7 @@ window.backend = (function () {
     xhr.open('GET', URL);
 
     function onLoadFunc() {
-      if (xhr.status === 200) {
+      if (xhr.status === SERVER_STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError(xhr.status);
@@ -31,7 +32,7 @@ window.backend = (function () {
     xhr.open('POST', URL_SEND);
     xhr.send(data);
     function onLoadFunc() {
-      if (xhr.status === 200) {
+      if (xhr.status === SERVER_STATUS_OK) {
         onLoad(xhr.response);
       } else {
         onError(xhr.status);

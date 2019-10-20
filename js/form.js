@@ -2,7 +2,7 @@
 window.form = (function () {
   var mainPin = window.utils.mainPin;
   var form = window.utils.form;
-  var adressWithPin = window.pin.adressWithPin;
+  var addressWithPin = window.pin.addressWithPin;
   var setRooms = window.validators.setRooms;
   var address = window.utils.address;
   var save = window.backend.save;
@@ -38,7 +38,7 @@ window.form = (function () {
 
   function adFormDisabled() {
     form.classList.add('ad-form--disabled');
-    address.value = adressWithPin(mainPin);
+    address.value = addressWithPin(mainPin);
     addDisabledAttr(child);
     addDisabledAttr(mapFilters);
     addDisabledAttr(mapFeatures);

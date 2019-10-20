@@ -23,18 +23,18 @@ window.cards = (function () {
   }
 
   function renderFeatureList(parent, selector, features) {
-    var cardelemListFeature = parent.querySelector(selector);
+    var cardElemListFeature = parent.querySelector(selector);
     var docFragment = document.createDocumentFragment();
     features.forEach(function (element) {
       var li = document.createElement('li');
       li.className = 'popup__feature ' + 'popup__feature--' + element;
       docFragment.appendChild(li);
     });
-    cardelemListFeature.appendChild(docFragment);
+    cardElemListFeature.appendChild(docFragment);
   }
 
   function renderPhotoList(parent, selector, photos) {
-    var cardelemListFeature = parent.querySelector(selector);
+    var cardElemListFeature = parent.querySelector(selector);
     var docFragment = document.createDocumentFragment();
     photos.forEach(function (element) {
       var img = document.createElement('img');
@@ -45,7 +45,7 @@ window.cards = (function () {
       img.alt = 'Фотография жилья';
       docFragment.appendChild(img);
     });
-    cardelemListFeature.appendChild(docFragment);
+    cardElemListFeature.appendChild(docFragment);
   }
 
   function onPopupCloseClick() {

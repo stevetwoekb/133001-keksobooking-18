@@ -10,28 +10,6 @@ window.utils = (function () {
   var mainElement = document.querySelector('main');
   var errorBtn;
   var docFragment = document.createDocumentFragment();
-  function getRandomElement(array) {
-    return array[Math.floor(Math.random() * array.length)];
-  }
-
-  function getRandomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
-
-  function shuffleArray(array) {
-    var newArray = array.slice();
-    for (var i = newArray.length - 1; i > 0; i--) {
-      var j = getRandomNumberInRange(0, newArray.length);
-      var temp = newArray[i];
-      newArray[i] = newArray[j];
-      newArray[j] = temp;
-    }
-    return newArray;
-  }
-
-  function getArrayWithRandomLength(array) {
-    return shuffleArray(array).slice(0, getRandomNumberInRange(0, array.length));
-  }
 
   function flexNormalize(number, forms) {
     number = Number(number);
@@ -117,15 +95,11 @@ window.utils = (function () {
     successElement.addEventListener('click', onMessageSuccessClick);
   }
 
-
   return {
     mapElement: map,
     form: adForm,
     address: adAddress,
     mainPin: mapMainPin,
-    randomElement: getRandomElement,
-    randomLengthArray: getArrayWithRandomLength,
-    numberRange: getRandomNumberInRange,
     rooms: roomsFlexNormalize,
     guests: guestsFlexNormalize,
     clone: cloneElements,
