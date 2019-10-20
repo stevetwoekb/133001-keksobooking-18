@@ -36,8 +36,11 @@ window.map = (function () {
       var newPositionX = pinPosition.x - (startPosition.x - evtMove.clientX);
       var newPositionY = pinPosition.y - (startPosition.y - evtMove.clientY);
       var maxHeightPosition = mapHeight - LOCATION_Y_MIN;
-      var maxWidthPosition = mapWidth - pinWidth;
-      if (newPositionX >= 0 && newPositionY >= 0 && newPositionY <= maxHeightPosition && newPositionX <= maxWidthPosition) {
+      var minWidthPosition = 0 - (pinWidth / 2);
+      var maxWidthPosition = mapWidth - (pinWidth / 2);
+      if (newPositionY <= LOCATION_Y_MIN) {
+        newPositionY = LOCATION_Y_MIN;
+      } if (newPositionX >= minWidthPosition && newPositionY >= 0 && newPositionY <= maxHeightPosition && newPositionX <= maxWidthPosition) {
         mainPin.style.left = newPositionX + 'px';
         mainPin.style.top = newPositionY + 'px';
         setAddress(mainPin);
@@ -81,8 +84,17 @@ window.map = (function () {
     mainPin.removeEventListener('mousedown', onMapPinMousedown);
   }
 
+  function disableMap() {
+    map.classList.add('map--faded');
+    mainPin.addEventListener('mousedown', onMapPinMousedown);
+    mainPin.addEventListener('keydown', onMapPinKeydown)
+  }
+
   mainPin.addEventListener('mousedown', onMapPinMousedown);
   mainPin.addEventListener('mousedown', onMapPinMoveMousedown);
   mainPin.addEventListener('keydown', onMapPinKeydown);
 
+  return {
+    disable: disableMap,
+  };
 })();
